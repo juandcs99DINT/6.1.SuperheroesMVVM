@@ -16,12 +16,23 @@
         <local:FondoConverter x:Key="conversorFondo"></local:FondoConverter>
         <local:VisibilityConverter x:Key="conversorVisibilidad"></local:VisibilityConverter>
 
-        <Style TargetType="Image"
-               x:Key="flechas">
-            <Setter Property="Width"
-                    Value="24"></Setter>
-            <Setter Property="Source"
-                    Value="assets/arrow.png"></Setter>
+        <Style TargetType="{x:Type Image}" x:Key="FlechasImage">
+            <Setter Property="Height" Value="25"></Setter>
+            <Setter Property="Margin" Value="3"></Setter>
+            <Setter Property="Source" Value="assets/arrow.png"></Setter>
+        </Style>
+        <Style TargetType="{x:Type Image}" x:Key="AlRevesImage" BasedOn="{StaticResource FlechasImage}">
+            <Setter Property="RenderTransform">
+                <Setter.Value>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                        <SkewTransform AngleY="0" AngleX="0"/>
+                        <RotateTransform Angle="0"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"></Setter>
         </Style>
 
         <Style TargetType="TextBlock"
@@ -31,8 +42,13 @@
             <Setter Property="FontWeight"
                     Value="Bold"></Setter>
         </Style>
-
     </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding AvanzarCommand}" Key="A" Modifiers="Ctrl"/>
+        <KeyBinding Command="{Binding RetrocederCommand}" Key="R" Modifiers="Ctrl"/>
+
+    </Window.InputBindings>
     <DockPanel x:Name="superheroeDockPanel"
                        Background="{Binding Path=HeroeActual.Heroe, Converter={StaticResource conversorFondo}}">
         <DockPanel LastChildFill="False"
@@ -64,9 +80,9 @@
         <StackPanel DockPanel.Dock="Bottom"
                             Orientation="Horizontal"
                             HorizontalAlignment="Center">
-            <Image x:Name="leftImage"
-                           Style="{StaticResource flechas}"
-                           MouseLeftButtonUp="leftImage_MouseLeftButtonUp"></Image>
+            <Button Command="{Binding RetrocederCommand}" Template="{DynamicResource ButtonControlFlechaTemplate}">
+                <Image Style="{StaticResource FlechasImage}"></Image>
+            </Button>
             <TextBlock x:Name="actualTextBlock"
                                Style="{StaticResource contador}"
                                Margin="5,0,0,5"
@@ -77,21 +93,9 @@
                                Style="{StaticResource contador}"
                                Margin="0,0,5,5"
                                Text="{Binding Path=Total}"></TextBlock>
-            <Image x:Name="rightImage"
-                           Style="{StaticResource flechas}"
-                           RenderTransformOrigin="0.5,0.5"
-                           MouseLeftButtonUp="rightImage_MouseLeftButtonUp">
-                <Image.RenderTransform>
-                    <TransformGroup>
-                        <ScaleTransform ScaleY="1"
-                                                ScaleX="-1" />
-                        <SkewTransform AngleY="0"
-                                               AngleX="0" />
-                        <RotateTransform Angle="0" />
-                        <TranslateTransform />
-                    </TransformGroup>
-                </Image.RenderTransform>
-            </Image>
+            <Button Command="{Binding AvanzarCommand}" Template="{DynamicResource ButtonControlFlechaTemplate}">
+                <Image Style="{StaticResource AlRevesImage}"></Image>
+            </Button>
         </StackPanel>
         <Image Source="{Binding Path=HeroeActual.Imagen}"
                        Stretch="UniformToFill"
